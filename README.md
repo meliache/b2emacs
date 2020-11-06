@@ -87,7 +87,7 @@ and once you have selected a candidate, a window with the description will open.
 For using these functions efficently, I really recommend using an
 incremental completion package for emacs, either the built-in
 [ido](https://www.masteringemacs.org/article/introduction-to-ido-mode), or the
-installable [ivy](https://github.com/abo-abo/swiper) or
+installable [ivy](https://github.com/abo-abo/swiper) (which I use) or
 [helm](https://github.com/emacs-helm/helm).
 
 Furthermore, the package provides functions for getting the description of the
