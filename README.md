@@ -98,3 +98,17 @@ basf2 variable/module that the point (cursor) is currently on:
 
 Also, you can just run `basf2-variables-help`, which will just open the output
 of `basf2 variables.py` in a help-window.
+
+## Optional: Add syntax highlighting to help buffers
+
+By default the emacs help buffer in which the variable/module documentations are
+displayed doesn't have any syntax highlighting, but to enable it, you can
+[hook](https://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html)
+some other emacs modes to the help mode. I found that `rst-mode` often looks
+good (see screenshot), though you will use the `help-mode` keybindings:
+
+``` elisp
+(add-hook 'help-mode-hook
+          (lambda () (when (member (buffer-name) '("*basf2-variable*" "*basf2-module*" "*basf2-variables*"))
+                  (rst-mode))))
+```
