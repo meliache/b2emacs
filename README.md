@@ -81,7 +81,7 @@ With the interactive functions
 - `basf2-describe-variable`
 - `basf2-describe-module`
 
-You will be prompted to select a basf2 variable/module name with autocompletion
+you will be prompted to select a basf2 variable/module name with autocompletion
 and once you have selected a candidate, a window with the description will open.
 
 For using these functions efficently, I really recommend using an
@@ -108,7 +108,9 @@ some other emacs modes to the help mode. I found that `rst-mode` often looks
 good (see screenshot), though you will use the `help-mode` keybindings:
 
 ``` elisp
-(add-hook 'help-mode-hook
-          (lambda () (when (member (buffer-name) '("*basf2-variable*" "*basf2-module*" "*basf2-variables*"))
-                  (rst-mode))))
+(defun rst-mode-if-in-basf2-help ()
+  (let ((basf2-help-buffers '("*basf2-variable*" "*basf2-module*" "*basf2-variables*")))
+    (when (member (buffer-name) basf2-help-buffers)
+      (rst-mode))))
+(add-hook 'help-mode-hook #'rst-mode-if-in-basf2-help)
 ```
