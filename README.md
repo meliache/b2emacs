@@ -51,7 +51,7 @@ handle that for you:
 
 ``` elisp
 (straight-use-package
- '(b2emacs :type git :host github :repo "meliache/b2emacs" :branch  "main")
+ '(b2emacs :type git :host github :repo "meliache/b2emacs" :branch  "main"))
 ```
 
 ## Usage
