@@ -86,9 +86,9 @@ and once you have selected a candidate, a window with the description will open.
 
 For using these functions efficently, I really recommend using an
 incremental completion package for emacs, either the built-in
-[https://www.masteringemacs.org/article/introduction-to-ido-mode](ido), or the
+[ido](https://www.masteringemacs.org/article/introduction-to-ido-mode), or the
 installable [ivy](https://github.com/abo-abo/swiper) or
-<https://github.com/emacs-helm/helm>.
+[helm](https://github.com/emacs-helm/helm).
 
 Furthermore, the package provides functions for getting the description of the
 basf2 variable/module that the point (cursor) is currently on:
