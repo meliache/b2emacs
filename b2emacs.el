@@ -29,6 +29,8 @@
 ;; https://confluence.desy.de/x/8wx6B for more tipps on using EMACS with basf2.
 
 ;;; Code:
+(require 'help-mode)
+(require 'thingatpt)
 
 ;; In contrast to `python-shell-send-string` and similar existing functions
 ;; this does not interact with with an inferior python process. Also I cannot
