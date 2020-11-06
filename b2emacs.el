@@ -62,7 +62,7 @@ for k in list_available_modules().keys():
     (completing-read "Describe basf2 module: " (basf2-available-modules))))
   (let ((module-description
           (shell-command-to-string  (format "%s -m %s" (executable-find "basf2") module))))
-    (with-help-window "*basf-module-description*"
+    (with-help-window "*basf2-module-description*"
       (princ module-description))))
 
 
