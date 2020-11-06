@@ -1,10 +1,14 @@
-# b2emacs --- basf2 helper functions for EMACS
+# b2emacs --- Getting basf2 help from within emacs 
 
+This package provides functions for getting help on basf2 modules or basf2 variables from
+within emacs. Either from an interactive prompt with completion or by using the
+symbol under the cursor.
 
-This package is intended for scientists in the Belle II collaboration that work
-with the [Belle II Analysis Software Framework](https://doi.org/10.1007/s41781-018-0017-9) (basf2, currently still
-collaboration-internal). It provides functions for getting help on basf2 modules
-and basf2 variable from withing EMACS.
+It is intended for scientists in the Belle II collaboration that work with the
+[Belle II Analysis Software
+Framework](https://doi.org/10.1007/s41781-018-0017-9) (basf2, currently still
+collaboration-internal). ![](screenshots/is_signal.png)
+
 
 This package does not provide any IDE features for working with C++ or python.
 For that, I recommend using other packages, e.g.
