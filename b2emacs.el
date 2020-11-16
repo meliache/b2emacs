@@ -31,6 +31,11 @@
 ;;; Code:
 (require 'help-mode)
 (require 'thingatpt)
+(require 'json)
+
+(defun basf2--alist-keys (alist)
+  "Helper function to return all keys of an ALIST."
+  (mapcar 'car alist))
 
 ;; In contrast to `python-shell-send-string` and similar existing functions
 ;; this does not interact with with an inferior python process. Also I cannot
@@ -68,19 +73,31 @@ for k in list_available_modules().keys():
       (princ module-description))))
 
 
-(defun basf2-available-variables ()
-  "Return list of available variable names."
-  (split-string (python-command-to-string "
+(defun basf2--get-variables-info-alist ()
+  "Return alist with available variable names as keys and their group and description as values."
+  (let ((variables-info-json-string (basf2--python-command-to-string "
+import json
 from variables import variables as vm
-for var in vm.getVariables():
-    print(var.name)")))
+variables = vm.getVariables()
+variable_info_dict = {
+    var.name: {
+        'group': var.group,
+        'description': var.description,
+    }
+    for var in variables
+}
+print(json.dumps(variable_info_dict))"))
+        (json-key-type 'string))
+    (json-read-from-string variables-info-json-string)))
+
+
 
 ;;;###autoload
 (defun basf2-describe-variable (var)
   "Describe basf2 variable VAR. Supports autocompletion when run interactively."
   (interactive
    (list
-    (completing-read "Describe basf2 variable: " (basf2-available-variables))))
+    (completing-read "Describe basf2 variable: " (basf2--alist-keys (basf2--get-variables-info-alist)))))
   (with-help-window "*basf2-variable*"
     (princ (basf2--python-command-to-string (format "
 from variables import variables as vm
