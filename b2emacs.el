@@ -33,6 +33,14 @@
 (require 'thingatpt)
 (require 'json)
 
+;; Taken from Malabarba in https://emacs.stackexchange.com/a/3208
+(defun basf2--assoc-recursive (alist &rest keys)
+  "Recursively find KEYS in ALIST."
+  (while keys
+    (setq alist (cdr (assoc (pop keys) alist))))
+  alist)
+
+;; Taken from wasamasa  in https://emacs.stackexchange.com/a/33626
 (defun basf2--alist-keys (alist)
   "Helper function to return all keys of an ALIST."
   (mapcar 'car alist))
@@ -73,7 +81,7 @@ for k in list_available_modules().keys():
       (princ module-description))))
 
 
-(defun basf2--get-variables-info-alist ()
+(defun basf2--get-variable-info-alist ()
   "Return alist with available variable names as keys and their group and description as values."
   (let ((variables-info-json-string (basf2--python-command-to-string "
 import json
@@ -93,23 +101,25 @@ print(json.dumps(variable_info_dict))"))
 
 
 ;;;###autoload
-(defun basf2-describe-variable (var)
-  "Describe basf2 variable VAR. Supports autocompletion when run interactively."
+(defun basf2-describe-variable (var-name variable-info-alist)
+  "Describe basf2 variable VAR-NAME using info from VARIABLE-INFO-ALIST. Supports autocompletion when run interactively."
   (interactive
-   (list
-    (completing-read "Describe basf2 variable: " (basf2--alist-keys (basf2--get-variables-info-alist)))))
+   (let* ((variable-info-alist (basf2--get-variable-info-alist))
+          (variable-names (basf2--alist-keys variable-info-alist)))
+    (list
+     (completing-read "Describe basf2 variable: " variable-names)
+     variable-info-alist)))
   (with-help-window "*basf2-variable*"
-    (princ (basf2--python-command-to-string (format "
-from variables import variables as vm
-var = vm.getVariable('%s')
-print('Variable:', var.name)
-print('\\n', var.description) " var)))))
+    (princ (format "Variable: %s\nGroup: %s\nDescription: %s"
+                   var-name
+                   (basf2--assoc-recursive variable-info-alist var-name "group")
+                   (basf2--assoc-recursive variable-info-alist var-name "description")))))
 
 ;;;###autoload
 (defun basf2-variable-at-point ()
   "Describe basf2 variable under the cursor position."
   (interactive)
-  (basf2-describe-variable (symbol-at-point)))
+  (basf2-describe-variable (symbol-at-point) (basf2--get-variable-info-alist)))
 
 ;;;###autoload
 (defun basf2-module-at-point ()
