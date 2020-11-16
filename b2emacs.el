@@ -37,7 +37,7 @@
 ;; just use `shell-command-to-string " python3 -c '...'`, because that does not
 ;; use python from the current exec-path, but creates a subshell with a clean
 ;; environment.
-(defun python-command-to-string (command)
+(defun basf2--python-command-to-string (command)
   "Run python3 with COMMAND and return output."
   (with-output-to-string
     (with-current-buffer standard-output
@@ -49,9 +49,9 @@
   (interactive)
   (shell-command  (concat "b2code-style-fix" " " buffer-file-name)))
 
-(defun basf2-available-modules ()
+(defun basf2--available-modules ()
   "Return list of available basf2 modules."
-  (split-string (python-command-to-string "
+  (split-string (basf2--python-command-to-string "
 from basf2 import list_available_modules
 for k in list_available_modules().keys():
     print(k)")))
@@ -61,7 +61,7 @@ for k in list_available_modules().keys():
   "Open description of MODULE in help-window. Supports autocompletion when run interactively."
   (interactive
    (list
-    (completing-read "Describe basf2 module: " (basf2-available-modules))))
+    (completing-read "Describe basf2 module: " (basf2--available-modules))))
   (let ((module-description
           (shell-command-to-string  (format "%s -m %s" (executable-find "basf2") module))))
     (with-help-window "*basf2-module*"
@@ -82,7 +82,7 @@ for var in vm.getVariables():
    (list
     (completing-read "Describe basf2 variable: " (basf2-available-variables))))
   (with-help-window "*basf2-variable*"
-    (princ (python-command-to-string (format "
+    (princ (basf2--python-command-to-string (format "
 from variables import variables as vm
 var = vm.getVariable('%s')
 print('Variable:', var.name)
