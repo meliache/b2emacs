@@ -115,11 +115,30 @@ print(json.dumps(variable_info_dict))"))
                    (basf2--assoc-recursive variable-info-alist var-name "group")
                    (basf2--assoc-recursive variable-info-alist var-name "description")))))
 
+(defun basf2--get-meta-variable-base-name (meta-variable-name)
+  "Get the base name of a META-VARIABLE-NAME which includes the signature.
+
+The meta variable names from `vm.getNames()` include the
+signature in the name. However, this is problematic when using
+`symbol-at-point` for obtaining variable names, since those don't
+include that signature. To match those two, this function is
+needed to obtain the base names before the parantheses."
+  (car (split-string meta-variable-name "[\(\)]+" t " ")))
+
 ;;;###autoload
 (defun basf2-variable-at-point ()
   "Describe basf2 variable under the cursor position."
   (interactive)
-  (basf2-describe-variable (symbol-at-point) (basf2--get-variable-info-alist)))
+  (let* ((variable-infos (basf2--get-variable-info-alist))
+         ;; define alist which maps the base name of a metavariable (as returned
+         ;; by symbol-at-point) to the full name with the signature as returned
+         ;; by vm.getNames()
+         (variable-names-by-base-name
+          (mapcar
+           (lambda (var-info) (cons (basf2--get-meta-variable-base-name (car var-info)) (car var-info)))
+           variable-infos))
+         (variable-name (cdr (assoc (symbol-name (symbol-at-point)) variable-names-by-base-name))))
+    (basf2-describe-variable variable-name variable-infos)))
 
 ;;;###autoload
 (defun basf2-module-at-point ()
