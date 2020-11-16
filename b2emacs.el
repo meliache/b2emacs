@@ -64,6 +64,7 @@
 
 (defun basf2--available-modules ()
   "Return list of available basf2 modules."
+  (message "Loading list of basf2 modules. Please wait…")
   (split-string (basf2--python-command-to-string "
 from basf2 import list_available_modules
 for k in list_available_modules().keys():
@@ -83,6 +84,7 @@ for k in list_available_modules().keys():
 
 (defun basf2--get-variable-info-alist ()
   "Return alist with available variable names as keys and their group and description as values."
+  (message "Loading list of basf2 variables. Please wait…")
   (let ((variables-info-json-string (basf2--python-command-to-string "
 import json
 from variables import variables as vm
